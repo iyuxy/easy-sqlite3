@@ -9,4 +9,4 @@ A simple tool for nodejs to use sqlite
 ### insertData
 
 
-updateing。。。
+updateing...
