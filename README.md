@@ -7,3 +7,6 @@ A simple tool for nodejs to use sqlite
 ### selectData
 
 ### insertData
+
+
+updateing。。。
