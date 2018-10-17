@@ -1,5 +1,5 @@
 {
-  "name": "sqlite-simple-tool",
+  "name": "easy-sqlite",
   "version": "1.0.0",
   "description": "A simple tool for nodejs to use sqlite",
   "main": "index.js",

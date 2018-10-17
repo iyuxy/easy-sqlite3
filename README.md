@@ -1,4 +1,4 @@
-# sqlite-simple-tool
+# easy-sqlite
 
 A simple tool for nodejs to use sqlite
 
