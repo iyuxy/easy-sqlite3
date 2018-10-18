@@ -5,7 +5,7 @@
 
 const conf = {
 	database: 'iyuxy',
-	table: 'comment',
+	table: 'comments',
 	key: 'pageId',
 	column: {
 		_id: 'TEXT',

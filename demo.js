@@ -2,8 +2,9 @@ const util = require('./index');
 
 const demo = new util({
     database: 'iyuxy',
-    table: 'commentTEST2',
-    key: 'pageId',
+    table: 'comments',
+    key: ['pageId', 'parentId'],
+    path: 'db',
     column: {
         _id: 'TEXT',
         title: 'TEXT',
@@ -18,11 +19,11 @@ const demo = new util({
     }
 });
 
-demo.selectData({pageId: 10}, (data) => {
+demo.selectData({pageId: 10, parentId: "1015125415027768785934"}, (data) => {
     console.log(data);
 });
 demo.insertData({
-    "_id": "1015125415027768785934",
+    "_id": "1015125415027768785932",
     "title": "About me",
     "url": "https://www.iyuxy.com/aboutme/",
     "pageId": 10,
@@ -30,6 +31,6 @@ demo.insertData({
     "nickname": "我有一万个名字",
     "comment": "UI推荐好评！",
     "website": "",
-    "parentId": "0",
+    "parentId": "1015125415027768785934",
     "time": 1512541502780
 })

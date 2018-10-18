@@ -6,6 +6,7 @@
 const _ = require('underscore');
 const Promise = require('bluebird');
 const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 
 const defaultConf = require('./config/conf');
 
@@ -14,9 +15,12 @@ function util(customConf) {
     this.initDB = () => {
         return new Promise((resolve, reject) => {
             if (conf.database && conf.table && conf.column) {
-                let DB = new sqlite3.Database('./db/' + conf.database + '.db');
-                DB.each('SELECT name FROM sqlite_master WHERE type="table" ORDER BY name', (err, row) => {
-                    if (!_.contains(_.values(row), conf.table)) {
+                let confPath = conf.path || 'db';
+                let dbPath = path.resolve(__dirname, confPath, conf.database + '.db');
+                let DB = new sqlite3.Database(dbPath);
+                // 查询表是否已经创建
+                DB.all('SELECT name FROM sqlite_master WHERE type="table" ORDER BY name', (err, rows) => {
+                    if (!_.contains(_.values(rows), conf.table)) {
                         let columnArray = [];
                         _.each(conf.column, (value, key) => {
                             columnArray.push(key + ' ' + value);
@@ -88,14 +92,39 @@ function util(customConf) {
         }); 
     };
     this.selectData = (params, callback, errorCallback) => {
+        let selectList = [];
+
+        // 处理下字符串参数，以防被拼接成Number类型，导致查询失败
+        _.each(params, (value, key) => {
+            if (typeof value === 'string') {
+                params[key] = '"' + value + '"';
+            }
+        });
+        // 处理查询参数
+        if (conf.key instanceof Array) {
+            _.each(conf.key, (item) => {
+                selectList.push(item + ' = ' + params[item]);
+            })
+        }
+        else if (typeof conf.key === 'string') {
+            selectList.push(conf.key + ' = ' + params[conf.key]);
+        }
+        else {
+            if (typeof errorCallback === 'function') {
+                errorCallback();
+                return;
+            }
+            else {
+                throw new Error('查询失败');
+            }
+        }
         this.initDB().then((DB) => {
             let selectSql = 'select * from '
                 + conf.table
                 + ' WHERE '
-                + conf.key
-                + ' = '
-                + params[conf.key]
+                + selectList.join(' AND ')
                 + ';'
+            console.log(selectSql)
             DB.all(selectSql, function(err, rows) {
                 if (err === null && typeof callback === 'function') {
                     callback(rows);
@@ -107,6 +136,8 @@ function util(customConf) {
                     throw new Error('查询失败');
                 }
             });
+        }, (err) => {
+            throw new Error(err);
         });
     };
 };
