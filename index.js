@@ -7,6 +7,8 @@ const _ = require('underscore');
 const Promise = require('bluebird');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const exists = require('fs').existsSync;
+const mkdirp = require('mkdirp');
 
 const defaultConf = require('./config/conf');
 
@@ -16,8 +18,12 @@ function util(customConf) {
         return new Promise((resolve, reject) => {
             if (conf.database && conf.table && conf.column) {
                 let confPath = conf.path || 'db';
-                let dbPath = path.resolve(__dirname, confPath, conf.database + '.db');
-                let DB = new sqlite3.Database(dbPath);
+                let dbPath = path.resolve(__dirname, confPath);
+                if (!exists(dbPath)) {
+                    mkdirp.sync(dbPath);
+                }
+                let dbFile = path.resolve(dbPath, conf.database + '.db');
+                let DB = new sqlite3.Database(dbFile);
                 // 查询表是否已经创建
                 DB.all('SELECT name FROM sqlite_master WHERE type="table" ORDER BY name', (err, rows) => {
                     if (!_.contains(_.values(rows), conf.table)) {
@@ -124,7 +130,6 @@ function util(customConf) {
                 + ' WHERE '
                 + selectList.join(' AND ')
                 + ';'
-            console.log(selectSql)
             DB.all(selectSql, function(err, rows) {
                 if (err === null && typeof callback === 'function') {
                     callback(rows);
