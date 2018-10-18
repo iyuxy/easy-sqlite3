@@ -55,7 +55,7 @@ EASY_SQLITE3_DEMO.insertData({
     "title": "About me",
     "url": "https://www.iyuxy.com/aboutme/",
     "pageId": 10,
-    "froms": "985207224@qq.com",
+    "email": "985207224@qq.com",
     "nickname": "我有一万个名字",
     "comment": "UI推荐好评！",
     "website": "",
