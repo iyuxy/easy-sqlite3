@@ -1,6 +1,6 @@
 {
-  "name": "easy-sqlite",
-  "version": "1.0.0",
+  "name": "easy-sqlite3",
+  "version": "1.0.1",
   "description": "A simple tool for nodejs to use sqlite",
   "main": "index.js",
   "scripts": {
