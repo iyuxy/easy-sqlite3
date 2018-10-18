@@ -18,7 +18,7 @@ function util(customConf) {
         return new Promise((resolve, reject) => {
             if (conf.database && conf.table && conf.column) {
                 let confPath = conf.path || 'db';
-                let dbPath = path.resolve(__dirname, confPath);
+                let dbPath = path.resolve(process.cwd(), confPath);
                 if (!exists(dbPath)) {
                     mkdirp.sync(dbPath);
                 }
