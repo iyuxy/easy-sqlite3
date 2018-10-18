@@ -7,9 +7,10 @@ const _ = require('underscore');
 const Promise = require('bluebird');
 const sqlite3 = require('sqlite3').verbose();
 
-const conf = require('./config/conf');
+const defaultConf = require('./config/conf');
 
-function util() {
+function util(customConf) {
+    const conf = customConf || defaultConf;
     this.initDB = () => {
         return new Promise((resolve, reject) => {
             if (conf.database && conf.table && conf.column) {
@@ -110,4 +111,4 @@ function util() {
     };
 };
 
-module.exports = new util();
+module.exports = util;
